@@ -35,14 +35,12 @@ const work = await Promise.all(
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
-    <span class="text-xl">👋🏻</span>
     <h4
-      class="animate font-semibold text-black dark:text-white"
-      style="min-width: 20ch;"
+      class="animate font-semibold text-black dark:text-white flex items-center"
+      style="min-width: 20ch; min-height: 1.5em;"
     >
-      <span id="animated_intro"
-        >Hi there, I'm a software dev, read more about me below.
-      </span>
+      <span class="mr-2">&gt;</span>
+      <span id="animated_intro">hello I'm a software developer, more below.</span>
     </h4>
     <div class="space-y-16">
       <section>
@@ -55,34 +53,12 @@ const work = await Promise.all(
             applications.
           </p>
           <p class="animate">
-            My approach combines analytical thinking with a creative mindset,
-            allowing me to craft solutions that are both robust and
-            user-centric. I thrive in dynamic environments that encourage
-            problem-solving, collaboration, and the pursuit of excellence.
-          </p>
-          <p class="animate">
             Committed to continuous growth, I am always exploring the latest
             trends in technology and refining my skills to stay ahead in the
             ever-evolving tech landscape. My goal is to contribute to meaningful
             projects that push boundaries and deliver exceptional value.
           </p>
         </article>
-      </section>
-
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">Latest posts</h5>
-          <Link href="/blog"> See all posts </Link>
-        </div>
-        <ul class="flex flex-col gap-4">
-          {
-            blog.map((post) => (
-              <li>
-                <ArrowCard entry={post} />
-              </li>
-            ))
-          }
-        </ul>
       </section>
 
       <section class="animate space-y-6">
@@ -112,7 +88,7 @@ const work = await Promise.all(
         </ul>
       </section>
 
-      <section class="animate space-y-6">
+      <!-- <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
           <h5 class="font-semibold text-black dark:text-white">
             Recent projects
@@ -128,9 +104,24 @@ const work = await Promise.all(
             ))
           }
         </ul>
+      </section> -->
+      <section class="animate space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-semibold text-black dark:text-white">Latest posts</h5>
+          <Link href="/blog"> See all posts </Link>
+        </div>
+        <ul class="flex flex-col gap-4">
+          {
+            blog.map((post) => (
+              <li>
+                <ArrowCard entry={post} />
+              </li>
+            ))
+          }
+        </ul>
       </section>
 
-      <section class="animate space-y-4">
+      <section id="connect" class="animate space-y-4">
         <h5 class="font-semibold text-black dark:text-white">Let's Connect</h5>
         <article>
           <p>
@@ -158,7 +149,7 @@ const work = await Promise.all(
               href={`mailto:${SITE.EMAIL}`}
               aria-label={`Email ${SITE.NAME}`}
             >
-            email
+              email
             </Link>
           </li>
         </ul>
@@ -166,37 +157,46 @@ const work = await Promise.all(
     </div>
     <script>
       const heroHeadline = document.getElementById("animated_intro");
-      const text = heroHeadline.textContent;
-      const typingSpeed = 160;
-      const deletingSpeed = 20;
-      const pauseTime = 400;
 
-      let index = 1; // Start from the second character to preserve the first character
-      let isDeleting = false;
+      // Check if the element exists
+      if (heroHeadline) {
+        const text = heroHeadline.textContent || ""; // Fallback to an empty string if textContent is null
+        const typingSpeed = 120;
+        const deletingSpeed = 20;
+        const pauseTime = 200;
 
-      function typeEffect() {
-        if (isDeleting) {
-          // Preserve the first character while deleting
-          heroHeadline.textContent = text[0] + text.substring(1, index--);
-        } else {
-          heroHeadline.textContent = text.substring(0, index++);
+        let index = 0; // Start from beginning since we moved the ">" out
+        let isDeleting = false;
+
+        function typeEffect() {
+          if (isDeleting) {
+            if (heroHeadline) {
+              heroHeadline.textContent = text.substring(0, index--);
+            }
+          } else {
+            if (heroHeadline) {
+              heroHeadline.textContent = text.substring(0, index++);
+            }
+          }
+
+          const delay = isDeleting ? deletingSpeed : typingSpeed;
+
+          // Handle transitions between typing and deleting
+          if (!isDeleting && index === text.length) {
+            setTimeout(() => (isDeleting = true), pauseTime);
+          } else if (isDeleting && index === 0) {
+            isDeleting = false;
+            setTimeout(typeEffect, pauseTime);
+            return;
+          }
+
+          setTimeout(typeEffect, delay);
         }
 
-        const delay = isDeleting ? deletingSpeed : typingSpeed;
-
-        // Handle transitions between typing and deleting
-        if (!isDeleting && index === text.length) {
-          setTimeout(() => (isDeleting = true), pauseTime);
-        } else if (isDeleting && index === 1) {
-          // Stop deleting when only the first character remains
-          isDeleting = false; // Switch to typing mode
-          setTimeout(typeEffect, pauseTime); // Pause before typing again
-          return;
-        }
-
-        setTimeout(typeEffect, delay);
+        typeEffect();
+      } else {
+        console.error("Element with ID 'animated_intro' not found in the DOM.");
       }
-      typeEffect();
     </script>
   </Container>
 </PageLayout>
