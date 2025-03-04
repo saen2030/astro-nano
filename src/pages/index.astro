@@ -161,8 +161,8 @@ const work = await Promise.all(
       // Check if the element exists
       if (heroHeadline) {
         const text = heroHeadline.textContent || ""; // Fallback to an empty string if textContent is null
-        const typingSpeed = 120;
-        const deletingSpeed = 20;
+        const typingSpeed = 150;
+        const deletingSpeed = 8000;
         const pauseTime = 200;
 
         let index = 0; // Start from beginning since we moved the ">" out
